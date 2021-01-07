@@ -4,8 +4,9 @@ import logo from '../../assets/images/logo.jpg';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import {logout} from '../../store/api/accounts';
 
-import { logout } from "../login/LoginActions";
+
 
 export class Dashboard extends React.Component {
     onLogout = () => {
@@ -13,7 +14,6 @@ export class Dashboard extends React.Component {
     };
 
     render() {
-        const { user } = this.props.auth;
         return (
             <div>
                 <Menu>
@@ -22,7 +22,7 @@ export class Dashboard extends React.Component {
                     </Menu.Item>
                     <Menu.Menu className='nav-container' position='right'>
                         <Menu.Item>
-                            <p>User: <b>{user.username}</b></p>
+                            <p>User: <b>{localStorage.getItem('user')}</b></p>
                         </Menu.Item>
                         <Menu.Item>
                             <Link onClick={this.onLogout}>Logout</Link>
@@ -43,7 +43,7 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    client: state.client
 });
 
 export default connect(mapStateToProps, {

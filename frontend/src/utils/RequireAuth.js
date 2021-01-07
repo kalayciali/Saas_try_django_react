@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 import PropTypes from "prop-types";
+import * as clientActions from '../store/actions/client';
 
 export default function requireAuth(Component) {
     class AuthenticatedComponent extends React.Component {
@@ -15,9 +16,11 @@ export default function requireAuth(Component) {
         }
 
         checkAuth() {
-            if (!this.props.isAuthenticated) {
+            if (!this.props.isAuthenticated && !this.props.token) {
                 const redirectAfterLogin = this.props.location.pathname;
                 this.props.dispatch(push(`/login?next=${redirectAfterLogin}`));
+            } else {
+                this.props.dispatch(clientActions.clientActions.set(this.props.token))
             }
         }
 
@@ -31,6 +34,7 @@ export default function requireAuth(Component) {
             );
         }
     }
+
     AuthenticatedComponent.propTypes = {
         isAuthenticated: PropTypes.bool.isRequired,
         location: PropTypes.shape({
@@ -41,8 +45,8 @@ export default function requireAuth(Component) {
 
     const mapStateToProps = state => {
         return {
-            isAuthenticated: state.auth.isAuthenticated,
-            token: state.auth.token
+            isAuthenticated: state.client.isAuthenticated,
+            token: state.client.token
         };
     };
     

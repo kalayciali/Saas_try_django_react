@@ -1,62 +1,146 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { Button, Form } from 'semantic-ui-react';
+import React, { Component} from 'react'
+import PropTypes from 'prop-types'; // ES6
+import Messages from '../notifications/Messages';
+import Errors from '../notifications/Errors';
 
-import { signupNewUser } from "./SignupActions";
+import { Form, Grid, Header,  Input, Button } from 'semantic-ui-react';
+import { connect } from 'react-redux'
+import { Link, withRouter } from 'react-router-dom'
+import {signupActions} from '../../store/actions/signup';
+
+
+
 
 class Signup extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
-            password: ""
+          email: "",
+            username: '',
+          password: ""
         };
-    }
+      }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+    onSubmit = () => {
+    this.props.signupRequest(this.state.email, this.state.username, this.state.password);
+  };
+
+    static propTypes = {
+        signupRequest: PropTypes.func,
+        signup: PropTypes.shape({
+            requesting: PropTypes.bool,
+            successful: PropTypes.bool,
+            messages: PropTypes.array,
+            errors: PropTypes.array,
+        }),
     };
 
-    onSignupClick = () => {
-        const userData = {
-            username: this.state.username,
-            password: this.state.password
-        };
-        this.props.signupNewUser(userData); // send signup request
-    };
+
 
     render() {
-        return (
-            <Form>
-                <Form.Field>
-                    <label>Username</label>
-                    <input type="text" name="username" placeholder="Enter username" isInvalid={this.props.createUser.usernameError} value={this.state.username} onChange={this.onChange}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Your password</label>
-                    <input type="password" name="password" placeholder="Enter password" isInvalid={this.props.createUser.passwordError} value={this.state.password} onChange={this.onChange}/>
-                </Form.Field>
-                <Button type='submit' onClick={this.onSignupClick}>Sign up</Button>
-                <p>
-                    Already have account? <Link to="/login">Login</Link>
-                </p>
-            </Form>
-        );
-    }
-}
+        const {
+            signup: {
+                requesting,
+                successful,
+                messages,
+                errors,
+            },
+        } = this.props
 
-Signup.propTypes = {
-    signupNewUser: PropTypes.func.isRequired,
-    createUser: PropTypes.object.isRequired
+
+
+        return (
+            <div className="signup-form">
+                <Grid textAlign='center' verticalAlign='middle'>
+                    <Grid.Column>
+                        <Header as='h2'
+                        textAlign='center'
+                        content="Sign up to create your account">
+                        </Header>
+                        <Form size='large'>
+                            <Form.Group widths="equal">
+                                <Form.Input fluid
+                                    icon="user"
+                                    iconPosition="left"
+                                    placeholder="First name"
+                                  />
+                                  <Form.Input fluid
+                                    icon="user"
+                                    iconPosition="left"
+                                    placeholder="Last name"
+                                  />
+                            </Form.Group>
+
+                            <Form.Input fluid 
+                                icon="mail"
+                                iconPosition="left"
+                                name="email"
+                                type="text"
+                                placeholder="Email address"
+                                onChange={this.onChange}
+                                className="email">
+                            </Form.Input>
+
+                            <Form.Input fluid
+                                icon="user"
+                                iconPosition="left"
+                                name="username"
+                                placeholder="Username"
+                                type="text"
+                                onChange={this.onChange}
+                                className="username">
+                            </Form.Input>
+
+                            <Form.Input fluid
+                                icon="lock"
+                                iconPosition="left"
+                                placeholder="Password"
+                                name="password"
+                                type="password"
+                                id="password"
+                                className="password"
+                                onChange={this.onChange}
+                                label="Password" >
+                            </Form.Input>
+                            <Button onClick={this.onSubmit} 
+                            content="SIGNUP"
+                            type="submit"
+                            size="large"
+                            color="blue">
+                            </Button>
+                        </Form>
+                    </Grid.Column>
+                </Grid>
+                <div className="auth-messages">
+                      {!requesting && !!errors.length && (
+                        <Errors message="Failure to signup due to:" errors={errors} />
+                      )}
+                      {!requesting && !!messages.length && (
+                        <Messages messages={messages} />
+                      )}
+                      {!requesting && successful && (
+                        <div>
+                          Signup Successful! <Link to="/login">Click here to Login »</Link>
+                        </div>
+                      )}
+                                {!requesting && !successful && (
+                        <Link to="/login">Already a Widgeter? Login Here »</Link>
+                      )}
+                </div>
+            </div>
+        )
+    }
 }
 
 const mapStateToProps = state => ({
-    createUser: state.createUser
-});
+    signup: state.signup,
+})
 
-export default connect(mapStateToProps, {
-    signupNewUser
-})(withRouter(Signup));
+const signupRequest = signupActions.request
+export default connect(mapStateToProps, {signupRequest})(withRouter(Signup))
+

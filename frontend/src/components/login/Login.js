@@ -1,62 +1,115 @@
-import React, { Component } from 'react';
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux"; //connect action and auth store
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { Button, Form } from 'semantic-ui-react';
 
-import { login } from "./LoginActions"
+import React, { Component} from 'react'
+import PropTypes from 'prop-types'; // ES6
+import Messages from '../notifications/Messages';
+import Errors from '../notifications/Errors';
+
+import { connect } from 'react-redux'
+import { Link, withRouter } from 'react-router-dom'
+import {loginActions} from '../../store/actions/login';
+import { Form, Grid, Header, Input, Button } from 'semantic-ui-react';
+
+
+
 
 class Login extends Component {
+
     constructor(props) {
-        super(props);
-        this.state = {
-            username: "",
-            password: ""
-        };
-    }
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
+     onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
-    onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+    onSubmit = () => {
+    this.props.loginRequest(this.state.email, this.state.password);
+  };
+
+    static propTypes = {
+        loginRequest: PropTypes.func,
+        login: PropTypes.shape({
+            requesting: PropTypes.bool,
+            successful: PropTypes.bool,
+            messages: PropTypes.array,
+            errors: PropTypes.array,
+        }),
     };
 
-    onLoginClick = () => {
-        const userData = {
-            username: this.state.username,
-            password: this.state.password
-        };
-        this.props.login(userData, "/dashboard"); // login request
-    };
 
     render() {
+        const {
+            login: {
+                requesting,
+                successful,
+                messages,
+                errors,
+            },
+        } = this.props
+
         return (
-            <Form>
-                <Form.Field>
-                    <label>Username</label>
-                    <input type="text" name="username" placeholder="Enter username" value={this.state.username} onChange={this.onChange}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Your password</label>
-                    <input type="password" name="password" placeholder="Enter password" value={this.state.password} onChange={this.onChange}/>
-                </Form.Field>
-                <Button type='submit' onClick={this.onLoginClick}>Login</Button>
-                <p>
-                    Don't have account? <Link to="/signup">Signup</Link>
-                </p>
-            </Form>
-        );
+            <div className="login-form">
+                <Grid textAlign='center' verticalAlign='middle'>
+                    <Grid.Column>
+                        <Header as='h2'
+                        textAlign='center'
+                        content="Sign in to your account">
+                        </Header>
+
+                        <Form size='large'>
+                            <Form.Input fluid
+                            icon="mail"
+                            iconPosition="left"
+                            name="email"
+                            type="text"
+                            placeholder="Email address"
+                            onChange={this.onChange}
+                            className="email">
+                            </Form.Input>
+
+                            <Form.Input fluid
+                            icon="lock"
+                            iconPosition="left"
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            onChange={this.onChange}
+                            className="password">
+                            </Form.Input>
+                            <Button type="submit"
+                            color="blue"
+                            fluid
+                            size="large"
+                            content="Sign In"
+                            onClick={this.onSubmit}>
+                            </Button>
+                        </Form>
+                </Grid.Column>
+            </Grid>
+            <div className="auth-messages">
+          {!requesting && !!errors.length && (
+            <Errors message="Failure to login due to:" errors={errors} />
+          )}
+          {!requesting && !!messages.length && (
+            <Messages messages={messages} />
+          )}
+            {requesting && <div>Logging in...</div>}
+          {!requesting && !successful && (
+            <Link to="/signup">Need to Signup? Click Here </Link>
+          )}
+            </div>
+        </div>
+        )
     }
 }
 
-Login.propTypes = {
-    login: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
-};
-
 const mapStateToProps = state => ({
-    auth: state.auth
-});
+    login: state.login,
+})
 
-export default connect(mapStateToProps, {
-    login
-})(withRouter(Login))
+const loginRequest = loginActions.request
+export default connect(mapStateToProps, {loginRequest})(withRouter(Login))
+

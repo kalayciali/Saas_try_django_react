@@ -5,12 +5,18 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
 import 'semantic-ui-css/semantic.min.css'; 
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import configureStore, { history } from './store/configureStore';
+
+const store = configureStore();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <App></App>
+        </ConnectedRouter>
+    </Provider>, document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
