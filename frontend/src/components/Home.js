@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Container } from "react-bootstrap";
 
 class Home extends Component {
   render() {
     return (
-      <Container>
+        <div>
         <h1>Home</h1>
         <p>
           <Link to="/login/">Login</Link>
@@ -16,7 +15,7 @@ class Home extends Component {
         <p>
           <Link to="/dashboard">Dashboard</Link>
         </p>
-      </Container>
+        </div>
     );
   }
 }

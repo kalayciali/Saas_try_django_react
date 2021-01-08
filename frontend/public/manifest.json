@@ -1,6 +1,6 @@
 {
-  "short_name": "LabInit",
-  "name": "Initialize Lab Environment",
+  "short_name": "cardTap",
+  "name": "Lab Environment Done Perfectly",
   "icons": [
     {
       "src": "favicon.ico",

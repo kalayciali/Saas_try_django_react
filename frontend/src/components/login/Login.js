@@ -7,7 +7,7 @@ import Errors from '../notifications/Errors';
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import {loginActions} from '../../store/actions/login';
-import { Form, Grid, Header, Input, Button } from 'semantic-ui-react';
+import { Image, Message, Segment, Form, Grid, Header, Input, Button } from 'semantic-ui-react';
 
 
 
@@ -52,41 +52,47 @@ class Login extends Component {
 
         return (
             <div className="login-form">
-                <Grid textAlign='center' verticalAlign='middle'>
-                    <Grid.Column>
+                <Grid textAlign='center' style={{height: '100vh'}} verticalAlign='middle'>
+                    <Grid.Column style={{ maxWidth: 450 }}>
                         <Header as='h2'
                         textAlign='center'
                         content="Sign in to your account">
+                            <Image src='../../assets/images/logo.jpg'></Image>
                         </Header>
 
                         <Form size='large'>
-                            <Form.Input fluid
-                            icon="mail"
-                            iconPosition="left"
-                            name="email"
-                            type="text"
-                            placeholder="Email address"
-                            onChange={this.onChange}
-                            className="email">
-                            </Form.Input>
+                            <Segment stacked>
+                                <Form.Input fluid
+                                icon="mail"
+                                iconPosition="left"
+                                name="email"
+                                type="text"
+                                placeholder="Email address"
+                                onChange={this.onChange}
+                                className="email">
+                                </Form.Input>
 
-                            <Form.Input fluid
-                            icon="lock"
-                            iconPosition="left"
-                            name="password"
-                            type="password"
-                            placeholder="Password"
-                            onChange={this.onChange}
-                            className="password">
-                            </Form.Input>
-                            <Button type="submit"
-                            color="blue"
-                            fluid
-                            size="large"
-                            content="Sign In"
-                            onClick={this.onSubmit}>
-                            </Button>
+                                <Form.Input fluid
+                                icon="lock"
+                                iconPosition="left"
+                                name="password"
+                                type="password"
+                                placeholder="Password"
+                                onChange={this.onChange}
+                                className="password">
+                                </Form.Input>
+                                <Button type="submit"
+                                color="blue"
+                                fluid
+                                size="large"
+                                content="Sign In"
+                                onClick={this.onSubmit}>
+                                </Button>
+                            </Segment>
                         </Form>
+                        <Message>
+                            New to us <Link to='/signup'>Sign up</Link>
+                        </Message>
                 </Grid.Column>
             </Grid>
             <div className="auth-messages">
@@ -97,9 +103,6 @@ class Login extends Component {
             <Messages messages={messages} />
           )}
             {requesting && <div>Logging in...</div>}
-          {!requesting && !successful && (
-            <Link to="/signup">Need to Signup? Click Here </Link>
-          )}
             </div>
         </div>
         )

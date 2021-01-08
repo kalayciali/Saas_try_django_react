@@ -18,7 +18,10 @@ class Signup extends Component {
         this.state = {
           email: "",
             username: '',
-          password: ""
+          password: "",
+            card_id: "",
+            first_name: "",
+            last_name: ""
         };
       }
 
@@ -27,7 +30,7 @@ class Signup extends Component {
   };
 
     onSubmit = () => {
-    this.props.signupRequest(this.state.email, this.state.username, this.state.password);
+    this.props.signupRequest(this.state);
   };
 
     static propTypes = {
@@ -66,15 +69,29 @@ class Signup extends Component {
                             <Form.Group widths="equal">
                                 <Form.Input fluid
                                     icon="user"
+                                    name="first_name"
                                     iconPosition="left"
                                     placeholder="First name"
+                                    onChange={this.onChange}
                                   />
                                   <Form.Input fluid
                                     icon="user"
+                                    name="last_name"
                                     iconPosition="left"
                                     placeholder="Last name"
+                                    onChange={this.onChange}
                                   />
                             </Form.Group>
+
+                            <Form.Input fluid 
+                                icon="vcard"
+                                iconPosition="left"
+                                name="card_id"
+                                type="text"
+                                placeholder="Your RFID Card Id"
+                                onChange={this.onChange}
+                                className="email">
+                            </Form.Input>
 
                             <Form.Input fluid 
                                 icon="mail"

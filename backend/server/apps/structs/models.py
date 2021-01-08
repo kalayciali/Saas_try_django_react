@@ -1,9 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
-User._meta.get_field('email')._unique = True
-User._meta.get_field('email').blank = False
-User._meta.get_field('email').null = False
+User = settings.AUTH_USER_MODEL
 
 class Company(models.Model):
     company_name = models.CharField(max_length=100)
@@ -28,11 +26,13 @@ class Profile(models.Model):
     research_group = models.ForeignKey(Researchgroup, on_delete=models.CASCADE)
     descript = models.CharField(max_length=500, blank=True)
 
-
-
-#class Hardware(models.Model):
-    #mac_address = models.CharField(max_length=12)
-    #creat_date = models.DateField()
-    #aws_thingname = models.CharField(max_length=100)
+class Hardware(models.Model):
+    mac_address = models.CharField(max_length=17)
+    class AllocatedChoices(models.TextChoices):
+        YES = 'Yes'
+        NO = 'No'
+    allocated = models.CharField(choices=AllocatedChoices.choices, max_length=5)
+    creat_date = models.DateTimeField()
+    aws_thingname = models.CharField(max_length=50)
 
 

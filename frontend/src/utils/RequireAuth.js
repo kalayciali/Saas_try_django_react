@@ -19,8 +19,6 @@ export default function requireAuth(Component) {
             if (!this.props.isAuthenticated && !this.props.token) {
                 const redirectAfterLogin = this.props.location.pathname;
                 this.props.dispatch(push(`/login?next=${redirectAfterLogin}`));
-            } else {
-                this.props.dispatch(clientActions.clientActions.set(this.props.token))
             }
         }
 

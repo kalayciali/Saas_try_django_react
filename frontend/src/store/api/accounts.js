@@ -22,9 +22,9 @@ export const getCurrentUser= async() => {
 }
 
 
-export const signupUser = async(email, username, password) => {
+export const signupUser = async(userData) => {
     try {
-        const response = await axios.post(BASE_URL + 'users/', {email, username, password})
+        const response = await axios.post(BASE_URL + 'users/', userData)
         return response
     } catch(error) {
         throw error
@@ -39,6 +39,7 @@ export const logout = async () => {
             throw error
         }
 }
+
 
 // helper functions //
 export function setCurrentUser (userData) {

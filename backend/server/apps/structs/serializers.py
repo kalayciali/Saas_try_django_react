@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from apps.structs.models import Profile, Company, Department, Researchgroup
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
+User = get_user_model()
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,11 +22,19 @@ class ResearchgroupSerializer(serializers.ModelSerializer):
         model = Researchgroup
         fields = ('company', 'department', 'name', 'descript')
 
+class GroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
+        fields = ('name')
+
 class UserSerializer(serializers.ModelSerializer):
+    groups = GroupSerializer()
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name')
+        fields = ('username', 'email', 'first_name', 'last_name', 'user_card_id', 'is_admin', 'groups')
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -34,6 +44,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = [ 'company', 'department', 'research_groups', 'user', 'descript' ]
+        fields = [ 'company', 'department', 'research_groups', 'user', 'descript', 'user_card_id' ]
 
 
